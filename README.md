@@ -1,6 +1,6 @@
 # Windmill-Power-Prediction (HackerEarth Contest)
 
-Domain: Machine Learning
+#### Domain: Machine Learning
 
 #### [Contest Link](https://www.hackerearth.com/challenges/competitive/hackerearth-machine-learning-challenge-predict-windmill-power/machine-learning/predict-the-power-kwh-produced-from-the-windmills-8-f055f832/)
 #### [Kaggle Solution](https://www.kaggle.com/code/mykeysid10/windmill-power-prediction)
