@@ -1,0 +1,25 @@
+*) References:
+
+https://stackoverflow.com/questions/53274403/error-expected-an-object-with-class-shiny-tag-while-rendering-valuebox
+https://rdrr.io/cran/shinydashboard/man/renderValueBox.html
+https://shiny.rstudio.com/articles/validation.html
+
+
+*) Features Ranges:
+
+wind_speed: 21.23 to 95.25
+atmospheric_temperature: 10.10 to 22.57
+shaft_temperature: 41.85 to 45.67
+blades_angle: -146.260 to 165.169
+gearbox_temperature: 40.56 to 45.87
+engine_temperature:  41.912 to 45.169
+motor_torque: 870 to 2460.9  
+atmospheric_pressure: 16891 to 116412
+area_temperature: 27.33 to 55
+windmill_body_temperature: 20.77 to 44.32
+wind_direction: 247.4137 to 331.6240      
+resistance:  1268 to 1828       
+blade_length:   2.249 to 18.21 
+blade_breadth: 0.2007 to 0.5000 
+
+Turbine Status: A,A2,AAA,AB,ABC,AC,B,B2,BA,BB,BBB,BCB,BD,D 

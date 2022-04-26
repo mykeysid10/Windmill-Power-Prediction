@@ -1,0 +1,146 @@
+library(shiny)
+library(shinydashboard)
+library(randomForest)
+library(data.table)
+library(readr)
+library(dygraphs)
+library(xts)          # To make the conversion data-frame / xts format
+library(tidyverse)
+library(lubridate)
+#library(highcharter)
+
+#model = readRDS("model1.rds")
+
+ui = shinyUI(
+       
+              dashboardBody( 
+                tabItems(
+                  
+                      #First Tab Content
+                      tabItem(tabName = "dashboard",
+                              
+                              fluidRow(style='margin: 10px;',
+                                       
+                                  box(width='100%',
+                                      h2("Time Series Analysis"),
+                                      #plotOutput("time_series",click = "plot_click",
+                                             #    dblclick = "plot_dblclick",
+                                              #   hover = "plot_hover",
+                                              #   brush = "plot_brush"),
+                                      fluidRow(column(width = 6,h4("Time Series Analysis", align = 'center'), plotOutput("time_series")))
+                                      
+                                      #fluidRow(column(width = 6,h4("Time Series Analysis", align = 'center'), highchartOutput('time_series')))
+                                  ), #End of Box 2
+                                  
+                                  box(width='100%',
+                                      h2("Pearson's Co-relation Graph"),
+                                      img(src="CM.JPG",align = "left",height='550px',width='700px')
+                                      #fluidRow(column(height = 100,width = 6,h4("Pearson's Corelation", align = 'center'), plotOutput("corelation")))
+                                  ), #End of Box 3 
+                                  
+                                  box(width='100%',
+                                      img(src="gif3.gif", align = "left",height='350px',width='600px'),
+                                      img(src="gif4.gif", align = "right",height='350px',width='600px')
+                                  ) #End of Box 4  
+                                  
+                              ) #End of FluidRow, 
+
+                          ), #End of Tab1
+                      
+                      #Second Tab Content
+                      tabItem(tabName = "form",
+                         
+                                   
+                          box(width='100%',
+                            
+                            textInput(inputId = "year", label = "Range (2018, 2019)", width = 325),
+                            textInput(inputId = "month", label = "Range(1 to 12)", width = 325),
+                            textInput(inputId = "day",label = "Range(1 to 31 According to Month)", width = 325))
+               
+
+server = shinyServer(function(input,output,session){
+  
+  datasetInput1 = reactive({
+    data = read_csv("tsa.csv")
+  })
+  
+  output$time_series = renderPlot({
+    data = datasetInput1()
+    # Then you can create the xts necessary to use dygraph
+    don = xts(x = data[,20], order.by = data$datetime)
+    
+    # Finally the plot
+    dygraph(don) %>%
+      dyOptions(labelsUTC = TRUE, fillGraph=T, fillAlpha=1, drawGrid = TRUE, colors="gold") %>%
+      dyRangeSelector() %>%
+      dyCrosshair(direction = "vertical") %>%
+      dyHighlight(highlightCircleSize = 4,highlightSeriesBackgroundAlpha = 0.2, hideOnMouseOut = FALSE)  %>%
+      dyRoller(rollPeriod = 1)
+    
+    #isolate(datasetInput1())
+  })
+  
+  #output$corelation = renderPlot({
+    #data = datasetInput1()
+    #library(ggplot2)
+    #library(GGally)
+    #library(repr) 
+    #options(repr.plot.width=30, repr.plot.height=15)
+    #ggcorr(data[,-1],nbreaks = 6,label = TRUE,label_size = 2,label_color = "black",size = 2.6,hjust = 0.85,palette = "PuOr")
+    #})
+  
+  
+  output$Case_No = renderValueBox({
+    #covid_dataset = read_csv("completed_dataset.csv")
+    x = nrow(data.frame(covid_dataset)) + 1
+    valueBox(x,"Your Case Number")
+  })
+  
+  datasetInput = reactive({
+    
+    df = data.frame(
+      Name = c(
+        "Age",
+        "S1_Cough","S2_Fever","S3_Dyspnea","SpO2","Temperature",
+        "Contact_with_COVID_positive_patient","Swab_test_result"),
+      Value = as.character(c(
+        input$Age,
+        input$S1_Cough,
+        input$S2_Fever,
+        input$S3_Dyspnea,
+        
+        input$SpO2,
+        input$Temperature,
+        input$Contact_with_COVID_positive_patient,
+        input$Swab_test_result)),
+      stringsAsFactors=FALSE)
+    
+    Risk_of_contracting_virus = 0
+    df = rbind(df,Risk_of_contracting_virus)
+    input = transpose(df)
+    write.table(input,"input.csv",sep = ",",quote = FALSE,row.names = FALSE,col.names = FALSE)
+    
+    test = read.csv(paste("input",".csv",sep=""),header = TRUE)
+    test$S1_Cough = as.factor(test$S1_Cough)
+    test$S2_Fever = as.factor(test$S2_Fever)
+    test$S3_Dyspnea = as.factor(test$S3_Dyspnea)
+    
+    test$Contact_with_COVID_positive_patient = as.factor(test$Contact_with_COVID_positive_patient)
+    test$Swab_test_result = as.factor(test$Swab_test_result)
+    
+    #test$Risk_of_contracting_virus = as.factor(test$Risk_of_contracting_virus)
+    output = data.frame(Prediction = predict(model,test),round(predict(model,test,type="prob"),3))
+    #output = data.frame(Risk = predict(model,test))
+    #output = predict(model,test)
+    print(output)
+  })
+  
+  #Prediction Test Result
+  output$tabledata = renderTable({
+    if(input$Submit>0)
+      isolate(datasetInput())
+  })
+  
+}) #End of Shiny Server
+
+shinyApp(ui,server)
