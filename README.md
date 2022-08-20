@@ -8,4 +8,4 @@
 #### Public Leaderboard: Rank 9 (Score: 97.37)
 #### Private Leaderboard: Rank 14 (Score: 97.22)
 
-#### [Web Application Link](https://mykeysid10.shinyapps.io/windmill-power-prediction/)
+#### [Web App Link](https://mykeysid10.shinyapps.io/windmill-power-prediction/)
