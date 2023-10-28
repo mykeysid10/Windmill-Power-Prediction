@@ -4,7 +4,7 @@
 
 #### Domain: Classical Machine Learning.
 
-#### Achievements: 9th Rank @ HackerEarth Contest of 4k Participants.
+#### Achievements: 9th Rank at HackerEarth Contest of 4k Participants.
 
 #### Objectives:
 1. Power Prediction: To develop a robust model that accurately predicts windmill power based on demographic details like atmospheric conditions, windmill specifications & geographical locations.
